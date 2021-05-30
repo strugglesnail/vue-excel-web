@@ -36,7 +36,7 @@ export default {
   methods: {
     getTables() {
       getTableList().then(res => {
-        this.treeData = res
+        this.treeData = res.data
       })
     },
     chooseTable() {
