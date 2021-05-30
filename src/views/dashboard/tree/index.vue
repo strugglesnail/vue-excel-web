@@ -3,6 +3,7 @@
     <el-input v-model="filterText" placeholder="Filter keyword" style="margin-bottom:30px;" />
 
     <el-tree
+      ref="tree"
       :data="treeData"
       node-key="id"
       default-expand-all
@@ -11,6 +12,7 @@
       :render-content="renderContent"
       :allow-drop="allowDrop"
       :allow-drag="allowDrag"
+      @check="currentChange	"
       @node-drag-start="handleDragStart"
       @node-drag-enter="handleDragEnter"
       @node-drag-leave="handleDragLeave"
@@ -53,22 +55,24 @@ export default {
       return data.label.indexOf(value) !== -1
     },
     handleDragStart(node, ev) {
-      console.log('drag start', node)
+      // console.log('drag start', node)
     },
     handleDragEnter(draggingNode, dropNode, ev) {
-      console.log('tree drag enter: ', dropNode.label)
+      // console.log('tree drag enter: ', dropNode.label)
     },
     handleDragLeave(draggingNode, dropNode, ev) {
-      console.log('tree drag leave: ', dropNode.label)
+      // console.log('tree drag leave: ', dropNode.label)
     },
     handleDragOver(draggingNode, dropNode, ev) {
       console.log('tree drag over: ', dropNode.label)
     },
     handleDragEnd(draggingNode, dropNode, dropType, ev) {
-      console.log('tree drag end: ', dropNode && dropNode.label, dropType)
+      // console.log('tree drag end: ', dropNode && dropNode.label, dropType)
+      // console.log(this.treeData)
+      this.getTreeData(this.getCheckedNodes())
     },
     handleDrop(draggingNode, dropNode, dropType, ev) {
-      console.log('tree drop: ', dropNode.label, dropType)
+      // console.log('tree drop: ', dropNode.label, dropType)
     },
     allowDrop(draggingNode, dropNode, type) {
       if (dropNode.data.label === '二级 3-1') {
@@ -94,6 +98,7 @@ export default {
       const children = parent.data.children || parent.data
       const index = children.findIndex(d => d.id === data.id)
       children.splice(index, 1)
+      this.getTreeData(this.getCheckedNodes())
     },
 
     renderContent(h, { node, data, store }) {
@@ -104,6 +109,12 @@ export default {
             <el-button size='mini' type='text' on-click={ () => this.remove(node, data) }>删除</el-button>
           </span>
         </span>)
+    },
+    getCheckedNodes() {
+      return this.$refs.tree.getCheckedNodes()[0]
+    },
+    currentChange(currentNode) {
+      this.getTreeData(currentNode)
     }
   }
 }
@@ -117,5 +128,7 @@ export default {
     font-size: 14px;
     padding-right: 8px;
   }
+  .el-tree .el-tree-node .is-leaf + .el-checkbox .el-checkbox__inner{display: none;}
+  .el-tree .el-tree-node .el-checkbox .el-checkbox__inner{display: inline-block;}
 </style>
 

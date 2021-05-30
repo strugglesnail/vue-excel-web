@@ -4,15 +4,15 @@
     <el-card class="box-card">
       <div slot="header" class="clearfix">
         <span>表名</span>
-        <el-button style="float: right; padding: 3px 0" type="text">请选择表</el-button>
+        <el-button style="float: right; padding: 3px 0" type="text" @click="chooseTable">请选择表</el-button>
       </div>
-      <custom-tree :tree-data="treeData" />
+      <custom-tree :tree-data="treeData" :get-tree-data="getTreeData" />
     </el-card>
   </div>
 </template>
 
 <script>
-import { getTableList } from '../../api/excel'
+import { getTableList, addFields } from '../../api/excel'
 import CustomTree from './tree/index'
 import { mapGetters } from 'vuex'
 
@@ -26,7 +26,8 @@ export default {
   },
   data() {
     return {
-      treeData: []
+      treeData: [],
+      checkedTreeData: {}
     }
   },
   mounted() {
@@ -37,6 +38,34 @@ export default {
       getTableList().then(res => {
         this.treeData = res
       })
+    },
+    chooseTable() {
+      console.log(typeof this.checkedTreeData, Object.keys(this.checkedTreeData).length)
+      if (!this.checkedTreeData || !this.checkedTreeData.hasOwnProperty('children') || this.checkedTreeData.children.length === 0) {
+        this.$message.warning('请选择复选框')
+        return
+      }
+      console.log('T: ', this.checkedTreeData.children.map(t => t.label).join(','))
+      const fields = []
+      this.checkedTreeData.children.forEach((d, i) => {
+        fields.push({
+          index: i + 1,
+          name: d.label,
+          type: d.type
+        })
+      })
+      // 同步
+      const params = {
+        name: this.checkedTreeData.label,
+        fields: fields
+      }
+      addFields(params).then(res => {
+
+      })
+    },
+    getTreeData(treeData) {
+      this.checkedTreeData = treeData
+      console.log('re', this.checkedTreeData)
     }
   }
 }

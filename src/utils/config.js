@@ -29,20 +29,21 @@ service.interceptors.request.use(
 )
 service.interceptors.response.use(
   response => {
-    console.log(response)
-    const res = response.data
-
-    // if the custom code is not 200, it is judged as an error.
-    if (response.status !== 200) {
-      Message({
-        message: res.msg || 'Error',
-        type: 'error',
-        duration: 3 * 1000
-      })
-      return Promise.reject(new Error(res.msg || 'Error'))
-    } else {
-      return response
-    }
+    console.log('resp: ', response)
+    // const res = response.data
+    //
+    // // if the custom code is not 200, it is judged as an error.
+    // if (response.status !== 200) {
+    //   Message({
+    //     message: res.msg || 'Error',
+    //     type: 'error',
+    //     duration: 3 * 1000
+    //   })
+    //   return Promise.reject(new Error(res.msg || 'Error'))
+    // } else {
+    //   return response
+    // }
+    return response
   },
   error => {
     // for debug
