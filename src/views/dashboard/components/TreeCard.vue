@@ -25,17 +25,16 @@
 </template>
 
 <script>
+import { getTableList } from '@/api/excel'
 export default {
   props: {
-    treeData: {
-      type: Array
-    },
     getTreeData: {
       type: Function
     }
   },
   data() {
     return {
+      treeData: [],
       filterText: '',
       defaultProps: {
         children: 'children',
@@ -48,8 +47,15 @@ export default {
       this.$refs.tree.filter(val)
     }
   },
-
+  mounted() {
+    this.getTables()
+  },
   methods: {
+    getTables() {
+      getTableList().then(res => {
+        this.treeData = res.data
+      })
+    },
     filterNode(value, data) {
       if (!value) return true
       return data.label.indexOf(value) !== -1
@@ -58,21 +64,21 @@ export default {
       // console.log('drag start', node)
     },
     handleDragEnter(draggingNode, dropNode, ev) {
-      // console.log('tree drag enter: ', dropNode.label)
+      // console.log('components drag enter: ', dropNode.label)
     },
     handleDragLeave(draggingNode, dropNode, ev) {
-      // console.log('tree drag leave: ', dropNode.label)
+      // console.log('components drag leave: ', dropNode.label)
     },
     handleDragOver(draggingNode, dropNode, ev) {
-      console.log('tree drag over: ', dropNode.label)
+      console.log('components drag over: ', dropNode.label)
     },
     handleDragEnd(draggingNode, dropNode, dropType, ev) {
-      // console.log('tree drag end: ', dropNode && dropNode.label, dropType)
+      // console.log('components drag end: ', dropNode && dropNode.label, dropType)
       // console.log(this.treeData)
       this.getTreeData(this.getCheckedNodes())
     },
     handleDrop(draggingNode, dropNode, dropType, ev) {
-      // console.log('tree drop: ', dropNode.label, dropType)
+      // console.log('components drop: ', dropNode.label, dropType)
     },
     allowDrop(draggingNode, dropNode, type) {
       if (dropNode.data.label === '二级 3-1') {

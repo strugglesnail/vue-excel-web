@@ -1,44 +1,41 @@
 <template>
   <div class="dashboard-container">
-    <!--<div class="dashboard-text">name: {{ name }}</div>-->
     <el-card class="box-card">
       <div slot="header" class="clearfix">
         <span>表名</span>
         <el-button style="float: right; padding: 3px 0" type="text" @click="chooseTable">请选择表</el-button>
       </div>
-      <custom-tree :tree-data="treeData" :get-tree-data="getTreeData" />
+      <custom-tree :get-tree-data="getTreeData" />
+    </el-card>
+    <el-card class="box-card">
+      <div slot="header" class="clearfix">
+        <span>字段排序</span>
+        <el-button style="float: right; padding: 3px 0" type="text" @click="chooseTable">表字段列表</el-button>
+        <table-card ref="table" :get-table-data="getTableData" />
+      </div>
     </el-card>
   </div>
 </template>
 
 <script>
-import { getTableList, addFields } from '../../api/excel'
-import CustomTree from './tree/index'
-import { mapGetters } from 'vuex'
+import { addFields } from '@/api/excel'
+import CustomTree from './components/TreeCard'
+import TableCard from './components/TableCard'
 
 export default {
   name: 'Dashboard',
-  components: { CustomTree },
+  components: { TableCard, CustomTree },
   computed: {
-    ...mapGetters([
-      'name'
-    ])
   },
   data() {
     return {
-      treeData: [],
-      checkedTreeData: {}
+      checkedTreeData: {},
+      tableData: [],
+      hasShowTableCard: false
     }
   },
-  mounted() {
-    this.getTables()
-  },
+
   methods: {
-    getTables() {
-      getTableList().then(res => {
-        this.treeData = res.data
-      })
-    },
     chooseTable() {
       console.log(typeof this.checkedTreeData, Object.keys(this.checkedTreeData).length)
       if (!this.checkedTreeData || !this.checkedTreeData.hasOwnProperty('children') || this.checkedTreeData.children.length === 0) {
@@ -60,12 +57,18 @@ export default {
         fields: fields
       }
       addFields(params).then(res => {
+        if (res.success) {
+          this.hasShowTableCard = true
+          // 刷新表格
 
+        }
       })
     },
     getTreeData(treeData) {
       this.checkedTreeData = treeData
-      console.log('re', this.checkedTreeData)
+    },
+    getTableData(tableData) {
+      this.tableData = tableData
     }
   }
 }
@@ -100,5 +103,7 @@ export default {
 
 .box-card {
   width: 480px;
+  display: inline-block;
+  margin-left: 150px;
 }
 </style>
