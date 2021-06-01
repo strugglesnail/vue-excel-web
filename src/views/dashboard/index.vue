@@ -103,6 +103,7 @@ export default {
 
 .box-card {
   width: 480px;
+  /*height: 600px;*/
   display: inline-block;
   margin-left: 150px;
 }

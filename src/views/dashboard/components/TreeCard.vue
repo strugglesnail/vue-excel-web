@@ -6,7 +6,7 @@
       ref="tree"
       :data="treeData"
       node-key="id"
-      default-expand-all
+      :default-expand-all="false"
       draggable
       show-checkbox
       :render-content="renderContent"

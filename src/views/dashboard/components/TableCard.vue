@@ -7,11 +7,11 @@
     <el-table-column
       prop="tableName"
       label="表名"
-      width="180">
+      width="100">
     </el-table-column>
     <el-table-column
       prop="fieldNames"
-      label="字段名称">
+      label="对应Excel列顺序">
     </el-table-column>
   </el-table>
 </template>

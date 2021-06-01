@@ -29,7 +29,6 @@ service.interceptors.request.use(
 )
 service.interceptors.response.use(
   response => {
-    console.log('resp: ', response)
     // const res = response.data
     //
     // // if the custom code is not 200, it is judged as an error.

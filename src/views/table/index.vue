@@ -1,66 +1,33 @@
 <template>
   <div class="app-container">
-    <el-table
-      v-loading="listLoading"
-      :data="list"
-      element-loading-text="Loading"
-      border
-      fit
-      highlight-current-row
-    >
-      <el-table-column align="center" label="ID" width="95">
-        <template slot-scope="scope">
-          {{ scope.$index }}
-        </template>
-      </el-table-column>
-      <el-table-column label="Title">
-        <template slot-scope="scope">
-          {{ scope.row.title }}
-        </template>
-      </el-table-column>
-      <el-table-column label="Author" width="110" align="center">
-        <template slot-scope="scope">
-          <span>{{ scope.row.author }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="Pageviews" width="110" align="center">
-        <template slot-scope="scope">
-          {{ scope.row.pageviews }}
-        </template>
-      </el-table-column>
-      <el-table-column class-name="status-col" label="Status" width="110" align="center">
-        <template slot-scope="scope">
-          <el-tag :type="scope.row.status | statusFilter">{{ scope.row.status }}</el-tag>
-        </template>
-      </el-table-column>
-      <el-table-column align="center" prop="created_at" label="Display_time" width="200">
-        <template slot-scope="scope">
-          <i class="el-icon-time" />
-          <span>{{ scope.row.display_time }}</span>
-        </template>
-      </el-table-column>
-    </el-table>
+      <!-- 上传文件 -->
+    <el-upload
+      class="upload-demo"
+      action="api/excel/upload"
+      :on-change="handleChange"
+      :file-list="fileList">
+      <el-button size="small" type="primary">点击上传</el-button>
+      <div slot="tip" class="el-upload__tip">只能上传xls\xlsx文件</div>
+    </el-upload>
+
+      <!-- 获取sheet，分别展示对应的下拉框 -->
+    <el-form label-position="right" label-width="80px">
+      <el-form-item v-for="item in sheetData" :label="item" :key="item">
+        <!--<el-input v-model="item"></el-input>-->
+        1111111111
+      </el-form-item>
+    </el-form>
   </div>
 </template>
 
 <script>
-import { getList } from '@/api/table'
+import { getFields } from '@/api/excel'
 
 export default {
-  filters: {
-    statusFilter(status) {
-      const statusMap = {
-        published: 'success',
-        draft: 'gray',
-        deleted: 'danger'
-      }
-      return statusMap[status]
-    }
-  },
   data() {
     return {
-      list: null,
-      listLoading: true
+      fileList: [],
+      sheetData: []
     }
   },
   created() {
@@ -68,11 +35,23 @@ export default {
   },
   methods: {
     fetchData() {
-      this.listLoading = true
-      getList().then(response => {
-        this.list = response.data.items
-        this.listLoading = false
-      })
+    },
+    handleChange(file, fileList) {
+      if (file.response) {
+        this.sheetData = file.response.data
+        getFields().then(res => {
+          if (res.success) {
+            const datas = []
+            res.data.forEach(d => {
+              datas.push({
+                label: ''
+              })
+            })
+
+          }
+        })
+      }
+      // this.fileList = fileList.slice(-3)
     }
   }
 }
