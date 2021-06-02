@@ -31,7 +31,7 @@
 </template>
 
 <script>
-import { getFields } from '@/api/excel'
+import { getFields, addExcelData } from '@/api/excel'
 
 export default {
   data() {
@@ -48,19 +48,29 @@ export default {
   methods: {
     fetchData() {
     },
-    change(val, sheetName) {
-      console.log(val, sheetName)
+    change(tableData, sheetName) {
+      console.log(tableData, sheetName)
       if (this.sheetParams && this.sheetParams.length === 0) {
-
+        this.sheetParams.push({
+          sheetName: sheetName,
+          tableData: tableData
+        })
       }
       this.sheetParams.forEach(sheet => {
+        const match = this.sheetParams.some(sheet => sheet['sheetName'] === sheetName)
         // 如果已经选择下拉框，则
-        if (sheet['sheetName'] === sheetName) {
-          sheet['fields'] = val
+        if (match) {
+          sheet['tableData'] = tableData
+        } else {
+          this.sheetParams.push({
+            sheetName: sheetName,
+            tableData: tableData
+          })
         }
       })
     },
-    handleChange(file, fileList) {
+    // 选择文件触发
+    handleChange(file) {
       if (file.response) {
         getFields().then(res => {
           if (res.success) {
@@ -68,7 +78,7 @@ export default {
             res.data.forEach(d => {
               datas.push({
                 label: d.tableName + '(' + d.fieldNames + ')',
-                value: d.fieldList
+                value: { tableName: d.tableName, fields: d.fieldList }
               })
             })
             file.response.data.forEach(sheetName => {
@@ -83,8 +93,12 @@ export default {
       // this.fileList = fileList.slice(-3)
     },
     onSubmit() {
-      console.log(this.value)
-      console.log('submit!')
+      console.log(this.sheetParams)
+      addExcelData(this.sheetParams).then(res => {
+        if (res.success) {
+          console.log('resp: ', res.data)
+        }
+      })
     }
   }
 }

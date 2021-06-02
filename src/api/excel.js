@@ -9,3 +9,6 @@ export function getFields(params) {
 export function addFields(params) {
   return post('api/excel/addFields', params)
 }
+export function addExcelData(params) {
+  return post('api/excel/addExcelData', params)
+}

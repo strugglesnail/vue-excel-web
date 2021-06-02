@@ -37,7 +37,7 @@ export default {
 
   methods: {
     chooseTable() {
-      console.log(typeof this.checkedTreeData, Object.keys(this.checkedTreeData).length)
+      // console.log(typeof this.checkedTreeData, Object.keys(this.checkedTreeData).length)
       if (!this.checkedTreeData || !this.checkedTreeData.hasOwnProperty('children') || this.checkedTreeData.children.length === 0) {
         this.$message.warning('请选择复选框')
         return
