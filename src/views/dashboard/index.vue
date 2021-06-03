@@ -42,7 +42,7 @@ export default {
         this.$message.warning('请选择复选框')
         return
       }
-      console.log('T: ', this.checkedTreeData.children.map(t => t.label).join(','))
+      // console.log('T: ', this.checkedTreeData.children.map(t => t.label).join(','))
       const fields = []
       this.checkedTreeData.children.forEach((d, i) => {
         fields.push({
@@ -60,7 +60,7 @@ export default {
         if (res.success) {
           this.hasShowTableCard = true
           // 刷新表格
-
+          this.$refs.table.getTableList()
         }
       })
     },
