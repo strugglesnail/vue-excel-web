@@ -117,10 +117,10 @@ export default {
         </span>)
     },
     getCheckedNodes() {
-      return this.$refs.tree.getCheckedNodes()[0]
+      return this.$refs.tree.getCheckedNodes()
     },
     currentChange(currentNode) {
-      this.getTreeData(currentNode)
+      this.getTreeData(this.getCheckedNodes())
     }
   }
 }

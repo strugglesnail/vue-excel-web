@@ -25,8 +25,6 @@ import TableCard from './components/TableCard'
 export default {
   name: 'Dashboard',
   components: { TableCard, CustomTree },
-  computed: {
-  },
   data() {
     return {
       checkedTreeData: {},
@@ -34,28 +32,39 @@ export default {
       hasShowTableCard: false
     }
   },
+  computed: {
+  },
 
   methods: {
     chooseTable() {
       // console.log(typeof this.checkedTreeData, Object.keys(this.checkedTreeData).length)
-      if (!this.checkedTreeData || !this.checkedTreeData.hasOwnProperty('children') || this.checkedTreeData.children.length === 0) {
+      if (!this.checkedTreeData || this.checkedTreeData.length === 0) {
         this.$message.warning('请选择复选框')
         return
       }
       // console.log('T: ', this.checkedTreeData.children.map(t => t.label).join(','))
-      const fields = []
-      this.checkedTreeData.children.forEach((d, i) => {
-        fields.push({
-          index: i + 1,
-          name: d.label,
-          type: d.type
+      // const fields = []
+      // this.checkedTreeData.children.forEach((d, i) => {
+      //   fields.push({
+      //     index: i + 1,
+      //     name: d.label,
+      //     type: d.type
+      //   })
+      // })
+      console.log('sfs: ', this.checkedTreeData)
+      const params = []
+      this.checkedTreeData.forEach(tree => {
+        const param = { tableName: tree.label, fields: [] }
+        tree.children.forEach((field, i) => {
+          param.fields.push({
+            index: i + 1,
+            name: field.label,
+            type: field.type
+          })
         })
+        params.push(param)
       })
       // 同步
-      const params = {
-        name: this.checkedTreeData.label,
-        fields: fields
-      }
       addFields(params).then(res => {
         if (res.success) {
           this.hasShowTableCard = true
@@ -64,8 +73,9 @@ export default {
         }
       })
     },
+    // 获取选中的树
     getTreeData(treeData) {
-      this.checkedTreeData = treeData
+      this.checkedTreeData = treeData.filter(td => td.hasOwnProperty('children'))
     },
     getTableData(tableData) {
       this.tableData = tableData
