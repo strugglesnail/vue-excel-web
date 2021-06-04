@@ -6,6 +6,9 @@ export function getTableList(params) {
 export function getFields(params) {
   return get('api/excel/getFields', params)
 }
+export function deleteTableField(params) {
+  return get('api/excel/deleteTableField', params)
+}
 export function addFields(params) {
   return post('api/excel/addFields', params)
 }

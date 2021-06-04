@@ -38,7 +38,7 @@ export default {
     return {
       fileList: [],
       sheetData: [],
-      value: [],
+      value: new Array(2),
       sheetParams: []
     }
   },
@@ -49,6 +49,7 @@ export default {
     fetchData() {
     },
     change(tableData, sheetName) {
+      tableData = JSON.parse(tableData)
       console.log(tableData, sheetName)
       if (this.sheetParams && this.sheetParams.length === 0) {
         this.sheetParams.push({
@@ -58,7 +59,7 @@ export default {
       }
       this.sheetParams.forEach(sheet => {
         const match = this.sheetParams.some(sheet => sheet['sheetName'] === sheetName)
-        // 如果已经选择下拉框，则
+        // 如果已经选择下拉框，则更新value
         if (match) {
           sheet['tableData'] = tableData
         } else {
@@ -78,7 +79,7 @@ export default {
             res.data.forEach(d => {
               datas.push({
                 label: d.tableName + '(' + d.fieldNames + ')',
-                value: { tableName: d.tableName, fields: d.fieldList }
+                value: JSON.stringify({ tableName: d.tableName, fields: d.fieldList })
               })
             })
             file.response.data.forEach(sheetName => {
@@ -87,16 +88,18 @@ export default {
                 tableList: datas
               })
             })
+            // console.log('label: ', JSON.stringify(this.sheetData))
           }
         })
       }
       // this.fileList = fileList.slice(-3)
     },
     onSubmit() {
-      console.log(this.sheetParams)
       addExcelData(this.sheetParams).then(res => {
         if (res.success) {
-          console.log('resp: ', res.data)
+          this.$message.success('导入成功')
+        } else {
+          this.$message.error(res.msg)
         }
       })
     }

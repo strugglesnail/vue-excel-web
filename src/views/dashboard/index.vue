@@ -42,16 +42,7 @@ export default {
         this.$message.warning('请选择复选框')
         return
       }
-      // console.log('T: ', this.checkedTreeData.children.map(t => t.label).join(','))
-      // const fields = []
-      // this.checkedTreeData.children.forEach((d, i) => {
-      //   fields.push({
-      //     index: i + 1,
-      //     name: d.label,
-      //     type: d.type
-      //   })
-      // })
-      console.log('sfs: ', this.checkedTreeData)
+      // 选择的复选框数据
       const params = []
       this.checkedTreeData.forEach(tree => {
         const param = { tableName: tree.label, fields: [] }
@@ -68,6 +59,7 @@ export default {
       addFields(params).then(res => {
         if (res.success) {
           this.hasShowTableCard = true
+          this.$message.success('保存成功')
           // 刷新表格
           this.$refs.table.getTableList()
         }
